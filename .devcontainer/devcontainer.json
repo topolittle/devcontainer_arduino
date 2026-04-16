@@ -6,24 +6,25 @@
 		"context": ".",
 		"args": {
 			"USER_NAME": "vscode",
-			"VARIANT": "debian-11",
-			"ARDUINO_IDE_VERSION": "1.8.19",
-			"ARDUINO_CLI_VERSION": "0.13.0"
+			"VARIANT": "debian-12",
+			"ARDUINO_CLI_VERSION": "1.4.1"
 		 }
 	},
 
-	// Set *default* container specific settings.json values on container create.
-	"settings": { 
-		"arduino.path": "/opt/arduino",
-		"arduino.logLevel": "verbose"
+	"customizations": {
+		"vscode": {
+			// Set *default* container specific settings.json values on container create.
+			"settings": {
+				"arduino.path": "/opt/arduino",
+				"arduino.logLevel": "verbose"
+			},
+			// Add the IDs of extensions you want installed when the container is created.
+			"extensions": [
+				"vsciot-vscode.vscode-arduino",
+				"yzhang.markdown-all-in-one"
+			]
+		}
 	},
-
-	// Add the IDs of extensions you want installed when the container is created.
-	"extensions": [
-		"vsciot-vscode.vscode-arduino",
-		"yzhang.markdown-all-in-one",
-		"vsciot-vscode.vscode-arduino"
-	],
 
 	"mounts": [
 		"source=/dev,target=/dev,type=bind"
@@ -36,7 +37,7 @@
 		"seccomp=unconfined"
 	],
 
-	"initializeCommand": "printf DIALOUT_GID=$(getent group dialout | cut -d ':' -f 3)\\\\n > ${localWorkspaceFolder}/.devcontainer/envfile",
+	"initializeCommand": "DIALOUT_GID=$(getent group dialout 2>/dev/null | cut -d ':' -f 3); if [ -z \"$DIALOUT_GID\" ]; then DIALOUT_GID=20; fi; printf \"DIALOUT_GID=%s\\n\" \"$DIALOUT_GID\" > ${localWorkspaceFolder}/.devcontainer/envfile",
 
 	"remoteUser": "vscode"
 }
